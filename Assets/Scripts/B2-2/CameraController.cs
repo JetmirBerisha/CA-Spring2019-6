@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-    private GameObject selected;
+    private B2PlayerController selected;
+    private bool haveSelection;
     private Vector3 moveCam;
     private Camera cam;
     public float fwdMult, scrollMult, spinMult;
@@ -13,6 +14,7 @@ public class CameraController : MonoBehaviour {
     void Start() {
         moveCam = new Vector3();
         cam = GetComponent<Camera>();
+        haveSelection = false;
     }
 
     // Update is called once per frame
@@ -32,18 +34,29 @@ public class CameraController : MonoBehaviour {
 
         // Mouse clicks to select and act upon a character
         if (Input.GetMouseButtonDown(0)) {
-            // left click   
+            // left click act
             ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit)) {
-                selected = hit.collider.gameObject;
+            if (haveSelection && Physics.Raycast(ray, out hit)) {
+                if (Vector3.Distance(selected.goTo, hit.point) < 2)
+                    selected.speed = 8;
+                else
+                    selected.speed = 3;
+                selected.goTo = hit.point;
+                selected.move = true;
             }
         }
 
         if (Input.GetMouseButtonDown(1)) {
-            // right click
+            // right click select
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) {
-                selected = hit.collider.gameObject;
+                if (hit.collider.tag == "Player") {
+                    selected = hit.collider.GetComponent<B2PlayerController>();
+                    selected.selected = true;
+                    haveSelection = true;
+                }
+                else
+                    haveSelection = false;
             }
         }
     }
