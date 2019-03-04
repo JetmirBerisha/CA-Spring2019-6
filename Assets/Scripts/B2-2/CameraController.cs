@@ -6,15 +6,17 @@ public class CameraController : MonoBehaviour {
     private B2PlayerController selected;
     private bool haveSelection;
     private Vector3 moveCam;
+    private Vector3 forward;
     private Camera cam;
     public float fwdMult, scrollMult, spinMult;
     Ray ray;
     RaycastHit hit;
     // Start is called before the first frame update
     void Start() {
-        moveCam = new Vector3();
+        moveCam = Vector3.zero;
         cam = GetComponent<Camera>();
         haveSelection = false;
+        forward = Vector3.forward;
     }
 
     // Update is called once per frame
@@ -22,11 +24,11 @@ public class CameraController : MonoBehaviour {
         float horizontal = spinMult * Input.GetAxis("Horizontal");
         float vertical = fwdMult * Input.GetAxis("Vertical");
         float scroll = scrollMult * Input.GetAxis("Mouse ScrollWheel");
-        moveCam.x = 0;
-        moveCam.y = 0;
-        moveCam.z = vertical;
-        cam.transform.Translate(moveCam * Time.deltaTime, Space.Self);
-        moveCam.z = 0;
+        // Move in local coordinates but move in the y direction by cos(a) where a is the angle by 
+        // which the camera is rotated about the x axis
+        forward.y = Mathf.Cos(cam.transform.localEulerAngles.x);
+        cam.transform.Translate(vertical * forward * Time.deltaTime, Space.Self);
+		Debug.Log("cam speeD: " + (vertical * forward * Time.deltaTime));
         moveCam.y = scroll;
         cam.transform.Translate(moveCam * Time.deltaTime, Space.World);
         moveCam.y = horizontal;
