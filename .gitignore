@@ -32,7 +32,13 @@
 **/Icon?
 **/ehthumbs.db
 **/[Tt]humbs.db
-Assets/Animations/
-Assets/Models/
+
+# Custom Ignores
+Assets/Animations/Creature Pack/
+Assets/Animations/Female Pack/
+Assets/Animations/Interactions Pack/
+Assets/Animations/Locomotion Pack/
+Assets/Models/Contemporary/
+Assets/Models/Ethnic/
 Build/
 Library/metadata/
