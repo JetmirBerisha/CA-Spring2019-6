@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour {
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (haveSelection && Physics.Raycast(ray, out hit)) {
                 if (Vector3.Distance(selected.goTo, hit.point) < 2)
-                    selected.speed = 8;
+                    selected.speed = 22;
                 else
                     selected.speed = 3;
                 selected.goTo = hit.point;

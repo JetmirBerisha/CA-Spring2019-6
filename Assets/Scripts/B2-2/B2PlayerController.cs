@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class B2PlayerController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class B2PlayerController : MonoBehaviour
     public bool arrived;
 	public Vector3 goTo;
     private NavMeshAgent agent;
+    public ThirdPersonCharacter character;
     // Start is called before the first frame update
     void Start() {
         speed = 3;	// Walk
@@ -26,6 +28,7 @@ public class B2PlayerController : MonoBehaviour
         if (move) {
             agent.speed = speed;
             agent.SetDestination(goTo);
+            character.Move(agent.desiredVelocity, false, true);
             move = false;
             arrived = false;
         }

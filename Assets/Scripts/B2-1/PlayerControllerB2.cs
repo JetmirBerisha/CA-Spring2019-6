@@ -34,11 +34,12 @@ public class PlayerControllerB2 : MonoBehaviour {
         anim.SetBool("Strafe", false);
         if (transform.position.y < 0.1) {
             jumping = false;
-            anim.SetBool("Jump", false);
+            //anim.SetBool("Jump", false);
         }
         if (!jumping && Input.GetKeyDown(KeyCode.Space)) {
             anim.SetFloat("Speed", 0);
-            anim.SetBool("Jump", true);
+            anim.SetTrigger("Jump");
+            //anim.SetBool("Jump", true);
             //anim.SetFloat("Turn", 0);
             jumping = true;
             rig.velocity += Vector3.up * jumpVelocity;
@@ -87,7 +88,7 @@ public class PlayerControllerB2 : MonoBehaviour {
             }
             else {
                 anim.SetFloat("Turn", 0);
-                Debug.Log("Speed: " + vertical);
+                //Debug.Log("Speed: " + vertical);
             }
         }
     }
