@@ -27,6 +27,7 @@ public class PlayerControllerB2 : MonoBehaviour {
         anim.SetBool("Jump", false);
         //anim.SetBool("Land", false);
         distToGround = GetComponent<CapsuleCollider>().bounds.extents.y;
+        velocity = 1;
     }
 
     // Update is called once per frame
@@ -63,13 +64,19 @@ public class PlayerControllerB2 : MonoBehaviour {
         vertical = mv * Input.GetAxis("Vertical");
         if (vertical > 0) {
             // Sprint
-            anim.SetFloat("Speed", 1);
+            velocity += 4*Time.deltaTime;
             if (IsGrounded() && (Input.GetKey(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftShift))) {
-                anim.SetFloat("Speed", 5);
+                if (velocity > 5)
+                    velocity = 5;
+                anim.SetFloat("Speed", velocity);
                 vertical *= 2;
                 horizontal *= 2;
             }
-            // move forward
+            else if (velocity >= 2)
+                velocity -= 9 * Time.deltaTime;
+            else if (velocity > 1 && velocity < 2)
+                velocity = 1;
+            anim.SetFloat("Speed", velocity);            // move forward
             transform.Translate(vertical * Time.deltaTime * forward, Space.Self);
             //anim.SetFloat("Speed", vertical);
             if (IsGrounded()) {
@@ -77,7 +84,7 @@ public class PlayerControllerB2 : MonoBehaviour {
                 transform.Rotate(horizontal * Time.deltaTime * Vector3.up, Space.World);
                 turn = Mathf.Cos(Mathf.Atan2(vertical, horizontal));
                 anim.SetFloat("Turn", turn);
-                Debug.Log("idle rotate, v>0");
+                //Debug.Log("idle rotate, v>0");
             }
         }
         else if (vertical < 0) {
@@ -95,12 +102,12 @@ public class PlayerControllerB2 : MonoBehaviour {
             if (System.Math.Abs(horizontal) > 0.1f) {
                 anim.SetFloat("Turn", Mathf.Cos(Mathf.Atan2(vertical, horizontal)));
                 transform.Rotate(horizontal * Time.deltaTime * Vector3.up, Space.World);
-                Debug.Log("idle rotate, v<0.1, h>0.1");
+                //Debug.Log("idle rotate, v<0.1, h>0.1");
             }
             else {
                 anim.SetFloat("Turn", 0);
                 rig.constraints = RigidbodyConstraints.FreezeRotation;
-                Debug.Log("idle rotate, v<0.1, h<=0.1");
+                //Debug.Log("idle rotate, v<0.1, h<=0.1");
                 //Debug.Log("Speed: " + vertical);
             }
         }
