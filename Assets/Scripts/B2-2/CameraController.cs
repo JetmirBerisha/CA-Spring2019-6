@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
         // which the camera is rotated about the x axis
         forward.y = Mathf.Cos(cam.transform.localEulerAngles.x);
         cam.transform.Translate(vertical * forward * Time.deltaTime, Space.Self);
-		Debug.Log("cam speeD: " + (vertical * forward * Time.deltaTime));
+		//Debug.Log("cam speeD: " + (vertical * forward * Time.deltaTime));
         moveCam.y = scroll;
         cam.transform.Translate(moveCam * Time.deltaTime, Space.World);
         moveCam.y = horizontal;

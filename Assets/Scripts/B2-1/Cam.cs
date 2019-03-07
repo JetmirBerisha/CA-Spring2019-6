@@ -7,23 +7,40 @@ public class Cam : MonoBehaviour
     // Start is called before the first frame update
     private Vector3 offset;
     public Transform t;
-    private bool attached;
+    public bool attached;
     private Camera cam;
     private GameObject player;
+    private Vector3 moveCam;
+    private Vector3 forward;
+    public float spinMult, fwdMult, scrollMult;
 
     void Start() {
         offset = new Vector3(0.5f, 2, -1);
         attached = false;
         cam = GetComponent<Camera>();
+        moveCam = Vector3.zero;
+        forward = Vector3.forward;
     }
 
     void Update() {
         if (attached) {
-            cam.transform.position = player.transform.TransformPoint(0.5f, 2, -1.2f);
+            cam.transform.position = player.transform.TransformPoint(0.5f, 2, -1.5f);
             cam.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
         else {
             // move freely script
+            float horizontal = spinMult * Input.GetAxis("Horizontal");
+            float vertical = fwdMult * Input.GetAxis("Vertical");
+            float scroll = scrollMult * Input.GetAxis("Mouse ScrollWheel");
+            // Move in local coordinates but move in the y direction by cos(a) where a is the angle by 
+            // which the camera is rotated about the x axis
+            forward.y = Mathf.Sin(cam.transform.localEulerAngles.x);
+            cam.transform.Translate(vertical * forward * Time.deltaTime, Space.Self);
+            //Debug.Log("cam speeD: " + (vertical * forward * Time.deltaTime));
+            moveCam.y = scroll;
+            cam.transform.Translate(moveCam * Time.deltaTime, Space.World);
+            moveCam.y = horizontal;
+            cam.transform.Rotate(moveCam * Time.deltaTime, Space.World);
 
             // click on player
             if (Input.GetMouseButtonDown(0)) {
